@@ -1,11 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from random import choice, randint
-from global_vars import maxValueOfParameters, listEnemy, listHabitant
+from global_vars import maxValueOfParameters, listEnemy, listHabitant, wave
 from filereader import namesList, ending, heroEnding
-from dice import putDice, selectPerson
+from dice import putDice, selectPerson, choiceWithWeight
 
-maxValueOfParameters = 10
 class Habitant():
 	def __init__(self, ancestor = None):
 		if ancestor is None:
@@ -45,6 +44,9 @@ class Habitant():
 		self.HP = self.Stats['Endurance']
 		self.IsHabitant = False
 		self.Target = None
+		# wave of birth (see comment to wave in global_vars):
+		self.WoB = wave
+		self.mutate()
 
 	def getHeroName(self, heroes):
 		maxValue = 0
@@ -56,7 +58,7 @@ class Habitant():
 				heroName = heroes[name_of_hero_and_stat].Description['Name']
 		return heroName
 
-	def printAllNotHeroes(self):
+	def printAllNotHeroes(self): # пока не все параметры (например, нет WoB)
 		print '-' * 20
 		print self.Description['Name'], self.Description['Patronymic'], self.Description['LastName']
 		print 'Str', self.Stats['Strenght'], 'Dex', self.Stats['Dexterity'], 'End', self.Stats['Endurance'], 'Acc', self.Stats['Accuracy'], 'Val', self.Stats['Valor'], 'Cow', self.Stats['Cowardice']
@@ -82,8 +84,36 @@ class Habitant():
 				if putDice(self.Stats['Valor'], self.Stats['Cowardice']):
 					# Select target to help him
 					if self.IsHabitant == True:
-						selectPerson('Valor', listHabitant)
+						targetToHelp = selectPerson('Valor', listHabitant)
 					else:
-						selectPerson('Valor', listEnemy)
-					
+						targetToHelp = selectPerson('Valor', listEnemy)
+					self.Target = targetToHelp.Target
+
+	def mutate(self):
+		mutationType = randint(1,5)
+		if mutationType == 1:	# namelist mutation
+			pass#########
+		if mutationType == 2:	# mutation of ending
+			pass#########
+		if mutationType == 3:	# mutation of heroEnding
+			pass##########
+		if mutationType == 4:	# mutation of Stats
+			stat = choice(self.Stats.keys())
+			# 0 - nothing, 1 - delete, 2 - add, 3 - change
+			mutationEvent = choiceWithWeight([1, 2, 2, 8])
+			if mutationEvent == 1 and self.Stats[stat] > 1:
+				self.Stats[stat] -= 1
+			if mutationEvent == 2:
+				self.Stats[stat] += 1
+			if mutationEvent == 3 and self.Stats[stat] > 1:
+					self.Stats[stat] -= 1
+					# Dictionary here is relations between stats: what tuples is binded:
+					self.Stats[{'Strenght' : 'Dexterity', 'Dexterity' : 'Strenght', 'Endurance' : 'Accuracy', 'Accuracy' : 'Endurance', 'Valor' : 'Cowardice', 'Cowardice' : 'Valor'}[stat]] += 1
+					#.
+		if mutationType == 5:	# mutation of memory about heroes
+			hero = self.Heroes[choice(self.Stats.keys())]
+			if hero.IsDead:
+				return
+			else:
+				pass############
 
