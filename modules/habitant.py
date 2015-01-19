@@ -18,13 +18,13 @@ class Habitant():
 					'Endurance' : randint (1, maxValueOfParameters), \
 					'Accuracy'  : randint (1, maxValueOfParameters), \
 					'Valor'     : randint (1, maxValueOfParameters), \
-					'Cowardice' : randint (1, maxValueOfParameters)}
+					'Caution' : randint (1, maxValueOfParameters)}
 			self.Heroes = {	'Strenght'  : self, \
 					'Dexterity' : self, \
 					'Endurance' : self, \
 					'Accuracy'  : self, \
 					'Valor'     : self, \
-					'Cowardice' : self}
+					'Caution' : self}
 		else:
 			self.Description = { 	'Name' : choice(namesList), \
 						'Patronymic' : ancestor.Description['Name'] + ending, \
@@ -34,13 +34,13 @@ class Habitant():
 					'Endurance' : ancestor.Stats['Endurance'], \
 					'Accuracy'  : ancestor.Stats['Accuracy'], \
 					'Valor'     : ancestor.Stats['Valor'], \
-					'Cowardice' : ancestor.Stats['Cowardice']}
+					'Caution' : ancestor.Stats['Caution']}
 			self.Heroes = {	'Strenght'  : ancestor.Heroes['Strenght'], \
 					'Dexterity' : ancestor.Heroes['Dexterity'], \
 					'Endurance' : ancestor.Heroes['Endurance'], \
 					'Accuracy'  : ancestor.Heroes['Accuracy'], \
 					'Valor'     : ancestor.Heroes['Valor'], \
-					'Cowardice' : ancestor.Heroes['Cowardice']}
+					'Caution' : ancestor.Heroes['Caution']}
 
 		self.IsDead = False
 		self.HP = self.Stats['Endurance']
@@ -63,7 +63,7 @@ class Habitant():
 	def printAllNotHeroes(self): # пока не все параметры (например, нет WoB)
 		print '-' * 20
 		print self.Description['Name'], self.Description['Patronymic'], self.Description['LastName']
-		print 'Str', self.Stats['Strenght'], 'Dex', self.Stats['Dexterity'], 'End', self.Stats['Endurance'], 'Acc', self.Stats['Accuracy'], 'Val', self.Stats['Valor'], 'Cow', self.Stats['Cowardice']
+		print 'Str', self.Stats['Strenght'], 'Dex', self.Stats['Dexterity'], 'End', self.Stats['Endurance'], 'Acc', self.Stats['Accuracy'], 'Val', self.Stats['Valor'], 'Cau', self.Stats['Caution']
 		print 'HP', self.HP
 		print 'Wave of Birth', self.WoB
 		if self.IsDead:
@@ -85,7 +85,7 @@ class Habitant():
 				target.IsDead = True
 				removeHabitant(target)
 				# Check if want help to other:
-				if putDice(self.Stats['Valor'], self.Stats['Cowardice']):
+				if putDice(self.Stats['Valor'], self.Stats['Caution']):
 					# Select target to help him
 					if self.IsHabitant == True:
 						targetToHelp = selectPerson('Valor', listHabitant)
@@ -117,7 +117,7 @@ class Habitant():
 			if mutationEvent == 3 and self.Stats[stat] > 1:
 				self.Stats[stat] -= 1
 				# Dictionary here is relations between stats: what tuples is binded:
-				self.Stats[{'Strenght' : 'Dexterity', 'Dexterity' : 'Strenght', 'Endurance' : 'Accuracy', 'Accuracy' : 'Endurance', 'Valor' : 'Cowardice', 'Cowardice' : 'Valor'}[stat]] += 1
+				self.Stats[{'Strenght' : 'Dexterity', 'Dexterity' : 'Strenght', 'Endurance' : 'Accuracy', 'Accuracy' : 'Endurance', 'Valor' : 'Caution', 'Caution' : 'Valor'}[stat]] += 1
 				#.
 				self.replaceHero(stat)
 		if mutationType == 5:	# mutation of memory about heroes
@@ -143,7 +143,7 @@ class Habitant():
 					if mutationEvent == 3 and hero.Stats[stat] > 1:
 						hero.Stats[stat] -= 1
 					# Dictionary here is relations between stats: what tuples is binded:
-						hero.Stats[{'Strenght' : 'Dexterity', 'Dexterity' : 'Strenght', 'Endurance' : 'Accuracy', 'Accuracy' : 'Endurance', 'Valor' : 'Cowardice', 'Cowardice' : 'Valor'}[stat]] += 1
+						hero.Stats[{'Strenght' : 'Dexterity', 'Dexterity' : 'Strenght', 'Endurance' : 'Accuracy', 'Accuracy' : 'Endurance', 'Valor' : 'Caution', 'Caution' : 'Valor'}[stat]] += 1
 					#.
 				if mutationHeroType == 5:
 					hero.WoB += randint(-round(sqrt(wave - hero.WoB)), round(sqrt(wave - hero.WoB)))
