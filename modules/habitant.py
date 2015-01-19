@@ -4,7 +4,7 @@ from random		import choice, randint
 from global_vars	import maxValueOfParameters, listEnemy, listHabitant, wave
 from filereader 	import namesList, ending, heroEnding
 from dice 		import putDice, selectPerson, choiceWithWeight
-from assistants 	import mutateString
+from assistants 	import mutateString, removeHabitant
 from math		import sqrt
 
 class Habitant():
@@ -65,6 +65,7 @@ class Habitant():
 		print self.Description['Name'], self.Description['Patronymic'], self.Description['LastName']
 		print 'Str', self.Stats['Strenght'], 'Dex', self.Stats['Dexterity'], 'End', self.Stats['Endurance'], 'Acc', self.Stats['Accuracy'], 'Val', self.Stats['Valor'], 'Cow', self.Stats['Cowardice']
 		print 'HP', self.HP
+		print 'Wave of Birth', self.WoB
 		if self.IsDead:
 			print 'It is dead'
 		else:
@@ -82,6 +83,7 @@ class Habitant():
 			target.HP -= self.Stats['Strenght']
 			if target.HP < 1:
 				target.IsDead = True
+				removeHabitant(target)
 				# Check if want help to other:
 				if putDice(self.Stats['Valor'], self.Stats['Cowardice']):
 					# Select target to help him
@@ -92,8 +94,10 @@ class Habitant():
 					self.Target = targetToHelp.Target
 
 	def mutate(self):
-		# 1 - name, 2 - ending, 3 - heroEnding, 4 - from stats, 5 - from Heroes
-		mutationType = randint(1,5)
+		global ending
+		global heroEnding
+		# 0 - nothing, 1 - name, 2 - ending, 3 - heroEnding, 4 - from stats, 5 - from Heroes
+		mutationType = choiceWithWeight([0, 1, 1, 1, 8, 2])
 		# 0 - nothing, 1 - delete, 2 - add, 3 - change
 		mutationEvent = choiceWithWeight([1, 2, 2, 8])
 		if mutationType == 1:	# namelist mutation
@@ -109,11 +113,13 @@ class Habitant():
 				self.Stats[stat] -= 1
 			if mutationEvent == 2:
 				self.Stats[stat] += 1
+				self.replaceHero(stat)
 			if mutationEvent == 3 and self.Stats[stat] > 1:
 				self.Stats[stat] -= 1
 				# Dictionary here is relations between stats: what tuples is binded:
 				self.Stats[{'Strenght' : 'Dexterity', 'Dexterity' : 'Strenght', 'Endurance' : 'Accuracy', 'Accuracy' : 'Endurance', 'Valor' : 'Cowardice', 'Cowardice' : 'Valor'}[stat]] += 1
 				#.
+				self.replaceHero(stat)
 		if mutationType == 5:	# mutation of memory about heroes
 			hero = self.Heroes[choice(self.Stats.keys())]
 			if hero.IsDead == False:
@@ -141,3 +147,9 @@ class Habitant():
 					#.
 				if mutationHeroType == 5:
 					hero.WoB += randint(-round(sqrt(wave - hero.WoB)), round(sqrt(wave - hero.WoB)))
+
+	def replaceHero(self, stat):
+		if self.Stats[stat] > self.Heroes[stat].Stats[stat]:
+			removeHabitant(self.Heroes[stat])
+			self.Heroes[stat] = self
+

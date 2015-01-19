@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from random import randint, choice
 from filereader import readFile
+from global_vars import listHabitant
 
 # for eventId look at mutate function in Habitant class
 def mutateString(string, eventId):
@@ -18,3 +19,14 @@ def mutateString(string, eventId):
 	elif eventId == 3:
 		numberSymbol = 2 * randint(0, len(string.decode('utf-8')) - 1)
 		return string[:numberSymbol] + newLetter + string[numberSymbol + 2:]
+
+def removeHabitant(hero):
+	if hero.IsDead == False:
+		return
+	for habitant in listHabitant:
+		for heroes in habitant.Heroes:
+			if heroes == hero:
+				return
+	for habitant in listHabitant:
+		if hero == habitant:
+			listHabitant.remove(hero)
