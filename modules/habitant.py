@@ -25,6 +25,7 @@ class Habitant():
 					'Accuracy'  : self, \
 					'Valor'     : self, \
 					'Caution' : self}
+			self.IsHabitant = False
 		else:
 			self.Description = { 	'Name' : choice(namesList), \
 						'Patronymic' : ancestor.Description['Name'] + ending, \
@@ -41,14 +42,17 @@ class Habitant():
 					'Accuracy'  : ancestor.Heroes['Accuracy'], \
 					'Valor'     : ancestor.Heroes['Valor'], \
 					'Caution' : ancestor.Heroes['Caution']}
-
+			self.IsHabitant = True
+		
 		self.IsDead = False
 		self.HP = self.Stats['Endurance']
-		self.IsHabitant = False
 		self.Target = None
 		# wave of birth (see comment to wave in global_vars):
 		self.WoB = wave
-		self.mutate()
+		if ancestor is not None:
+			print "New habitant was born: ", self.printName(), self.printStats()
+			self.mutate()
+			
 
 	def getHeroName(self, heroes):
 		maxValue = 0
@@ -59,6 +63,15 @@ class Habitant():
 				maxValue = heroes[name_of_hero_and_stat].Stats[name_of_hero_and_stat]
 				heroName = heroes[name_of_hero_and_stat].Description['Name']
 		return heroName
+
+	def printName(self):
+		mark = ""
+		if self.IsHabitant == True:
+			mark = " *"
+		return self.Description['Name'] + ' ' + self.Description['Patronymic'] + ' ' + self.Description['LastName'] + mark
+
+	def printStats(self):
+		return 'Str', self.Stats['Strenght'], 'Dex', self.Stats['Dexterity'], 'End', self.Stats['Endurance'], 'Acc', self.Stats['Accuracy'], 'Val', self.Stats['Valor'], 'Cau', self.Stats['Caution']
 
 	def printAllNotHeroes(self): # пока не все параметры (например, нет WoB)
 		print '-' * 20
@@ -76,22 +89,36 @@ class Habitant():
 			print 'It is enemy'
 		print '-' * 20
 
-	def hitting(self, target):
+	def hitting(self):
 		if self.IsDead == True:
+			print self.printName() + ' is dead'
 			return
-		if putDice(self.Stats['Accuracy'], target.Stats['Dexterity']):
-			target.HP -= self.Stats['Strenght']
-			if target.HP < 1:
-				target.IsDead = True
-				removeHabitant(target)
+		self.Target.Target = self
+		if putDice(self.Stats['Accuracy'], self.Target.Stats['Dexterity']):
+			self.Target.HP -= self.Stats['Strenght']
+			print self.printName() + ' hurts ' + self.Target.printName()
+			if self.Target.HP < 1:
+				print self.printName() + ' kill ' + self.Target.printName()
+				self.Target.IsDead = True
+				removeHabitant(self.Target)
 				# Check if want help to other:
 				if putDice(self.Stats['Valor'], self.Stats['Caution']):
 					# Select target to help him
+					targetToHelp = None
 					if self.IsHabitant == True:
-						targetToHelp = selectPerson('Valor', listHabitant)
+						if len(listHabitant) != 0:
+							targetToHelp = selectPerson('Valor', listHabitant)
 					else:
-						targetToHelp = selectPerson('Valor', listEnemy)
-					self.Target = targetToHelp.Target
+						if len(listEnemy) != 0:
+							targetToHelp = selectPerson('Valor', listEnemy)
+					if targetToHelp is None:
+						self.Target = self
+						print "No foes!"
+					else:
+						self.Target = targetToHelp.Target
+						print self.printName() + ' select new target: ' + self.Target.printName()
+		else:
+			print self.printName() + ' missing to ' + self.Target.printName()
 
 	def mutate(self):
 		global ending
@@ -110,11 +137,14 @@ class Habitant():
 		if mutationType == 4:	# mutation of Stats
 			stat = choice(self.Stats.keys())
 			if mutationEvent == 1 and self.Stats[stat] > 1:
+				print "Mutation: decrease of", stat
 				self.Stats[stat] -= 1
 			if mutationEvent == 2:
+				print "Mutation: increase of", stat
 				self.Stats[stat] += 1
 				self.replaceHero(stat)
 			if mutationEvent == 3 and self.Stats[stat] > 1:
+				print "Mutation:", stat, "overrepresentation"
 				self.Stats[stat] -= 1
 				# Dictionary here is relations between stats: what tuples is binded:
 				self.Stats[{'Strenght' : 'Dexterity', 'Dexterity' : 'Strenght', 'Endurance' : 'Accuracy', 'Accuracy' : 'Endurance', 'Valor' : 'Caution', 'Caution' : 'Valor'}[stat]] += 1

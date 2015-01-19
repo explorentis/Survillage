@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from random import randint, choice
 from filereader import readFile
-from global_vars import listHabitant
+from global_vars import listHabitant, listEnemy
 
 # for eventId look at mutate function in Habitant class
 def mutateString(string, eventId):
@@ -30,3 +30,6 @@ def removeHabitant(hero):
 	for habitant in listHabitant:
 		if hero == habitant:
 			listHabitant.remove(hero)
+	for habitant in listEnemy:
+		if hero == habitant:
+			listEnemy.remove(hero)
