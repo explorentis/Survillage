@@ -106,8 +106,11 @@ class Habitant():
 					if len(listEnemy) != 0:
 						targetToHelp = selectPerson('Valor', listEnemy)
 				if targetToHelp is None:
-					self.Target = self
-					print "No foes!"
+					if self.IsHabitant == True:
+						self.Target = choice(listEnemy)
+					else:
+						self.Target = choice(listHabitant)
+					print "It can help nobody"
 				else:
 					self.Target = targetToHelp.Target
 					print self.printName() + ' select new target: ' + self.Target.printName()
@@ -130,8 +133,11 @@ class Habitant():
 						if len(listEnemy) != 0:
 							targetToHelp = selectPerson('Valor', listEnemy)
 					if targetToHelp is None:
-						self.Target = self
-						print "No foes!"
+						if self.IsHabitant == True:
+							self.Target = choice(listEnemy)
+						else:
+							self.Target = choice(listHabitant)
+						print "It can help nobody"
 					else:
 						self.Target = targetToHelp.Target
 						print self.printName() + ' select new target: ' + self.Target.printName()
@@ -141,6 +147,7 @@ class Habitant():
 	def mutate(self):
 		global ending
 		global heroEnding
+		global maxValueOfParameters
 		# 0 - nothing, 1 - name, 2 - ending, 3 - heroEnding, 4 - from stats, 5 - from Heroes
 		mutationType = choiceWithWeight([0, 1, 1, 1, 8, 2])
 		# 0 - nothing, 1 - delete, 2 - add, 3 - change
@@ -168,6 +175,8 @@ class Habitant():
 				self.Stats[{'Strenght' : 'Dexterity', 'Dexterity' : 'Strenght', 'Endurance' : 'Accuracy', 'Accuracy' : 'Endurance', 'Valor' : 'Caution', 'Caution' : 'Valor'}[stat]] += 1
 				#.
 				self.replaceHero(stat)
+			if self.Stats[stat] > maxValueOfParameters:
+				maxValueOfParameters = self.Stats[stat]
 		if mutationType == 5:	# mutation of memory about heroes
 			hero = self.Heroes[choice(self.Stats.keys())]
 			if hero.IsDead == False:
@@ -193,6 +202,8 @@ class Habitant():
 					# Dictionary here is relations between stats: what tuples is binded:
 						hero.Stats[{'Strenght' : 'Dexterity', 'Dexterity' : 'Strenght', 'Endurance' : 'Accuracy', 'Accuracy' : 'Endurance', 'Valor' : 'Caution', 'Caution' : 'Valor'}[stat]] += 1
 					#.
+					if hero.Stats[stat] > maxValueOfParameters:
+						maxValueOfParameters = hero.Stats[stat]
 				if mutationHeroType == 5:
 					hero.WoB += randint(-round(sqrt(wave - hero.WoB)), round(sqrt(wave - hero.WoB)))
 

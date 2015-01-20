@@ -1,3 +1,7 @@
+0.0.8
+* bugfix: fixed changes of maximal parameters value of enemy (before it was only 1, now equal maxValueOfParameters)
+* bugfix: sometimes fighters select wrong enemy: dead or ally, now it fixed
+
 0.0.6
 * bugfix: select next opponent from living
 * bugfix: when enemy is down and dont want to help friend, only look at enemy body, dont push him
