@@ -4,6 +4,7 @@ from modules.habitant 		import Habitant
 from modules.global_vars 	import listHabitant, listEnemy, wave
 
 listHabitant.append(Habitant())
+listHabitant[0].IsHabitant = True
 
 while len(listHabitant) != 0:
 	print "=" * 10, "It was", wave, "wave from foundation first village", "=" * 10
@@ -33,6 +34,7 @@ while len(listHabitant) != 0:
 	# make love not war:
 	newHabitant = []
 	for habitant in  listHabitant:
+		habitant.HP = habitant.Stats['Endurance']
 		newHabitant.append(Habitant(habitant))
 	listHabitant += newHabitant
 	wave += 1

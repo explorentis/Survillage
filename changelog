@@ -1,0 +1,7 @@
+0.0.3
+* bugfix: habitant heals after fight
+* bugfix: first habitant now marked as habitant
+* bugfix: print correct stats when habitant born
+
+0.0.0
+first release candidate (released all from disdoc.txt)

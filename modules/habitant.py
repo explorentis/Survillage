@@ -50,8 +50,8 @@ class Habitant():
 		# wave of birth (see comment to wave in global_vars):
 		self.WoB = wave
 		if ancestor is not None:
-			print "New habitant was born: ", self.printName(), self.printStats()
 			self.mutate()
+			print "New habitant was born: ", self.printName(), self.printStats()
 			
 
 	def getHeroName(self, heroes):
