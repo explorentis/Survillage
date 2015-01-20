@@ -74,7 +74,6 @@ class Habitant():
 		return 'Str', self.Stats['Strenght'], 'Dex', self.Stats['Dexterity'], 'End', self.Stats['Endurance'], 'Acc', self.Stats['Accuracy'], 'Val', self.Stats['Valor'], 'Cau', self.Stats['Caution']
 
 	def printAllNotHeroes(self): # пока не все параметры (например, нет WoB)
-		print '-' * 20
 		print self.Description['Name'], self.Description['Patronymic'], self.Description['LastName']
 		print 'Str', self.Stats['Strenght'], 'Dex', self.Stats['Dexterity'], 'End', self.Stats['Endurance'], 'Acc', self.Stats['Accuracy'], 'Val', self.Stats['Valor'], 'Cau', self.Stats['Caution']
 		print 'HP', self.HP
@@ -94,6 +93,25 @@ class Habitant():
 			print self.printName() + ' is dead'
 			return
 		self.Target.Target = self
+		if self.Target.IsDead == True:
+			print self.printName() + ' look at body ' + self.Target.printName()
+			# Check if want help to other:
+			if putDice(self.Stats['Valor'], self.Stats['Caution']):
+				# Select target to help him
+				targetToHelp = None
+				if self.IsHabitant == True:
+					if len(listHabitant) != 0:
+						targetToHelp = selectPerson('Valor', listHabitant)
+				else:
+					if len(listEnemy) != 0:
+						targetToHelp = selectPerson('Valor', listEnemy)
+				if targetToHelp is None:
+					self.Target = self
+					print "No foes!"
+				else:
+					self.Target = targetToHelp.Target
+					print self.printName() + ' select new target: ' + self.Target.printName()
+			return
 		if putDice(self.Stats['Accuracy'], self.Target.Stats['Dexterity']):
 			self.Target.HP -= self.Stats['Strenght']
 			print self.printName() + ' hurts ' + self.Target.printName()

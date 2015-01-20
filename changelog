@@ -1,3 +1,8 @@
+0.0.6
+* bugfix: select next opponent from living
+* bugfix: when enemy is down and dont want to help friend, only look at enemy body, dont push him
+* little cosmetics changes in output
+
 0.0.3
 * bugfix: habitant heals after fight
 * bugfix: first habitant now marked as habitant

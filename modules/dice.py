@@ -28,13 +28,15 @@ Returns person (pointer to it)
 def selectPerson(stat, listPersons):
 	weightSum = 0
 	for i in listPersons:
-		weightSum += i.Stats[stat]
+		if i.IsDead == False:
+			weightSum += i.Stats[stat]
 	score = randint(0, weightSum)
 	for i in listPersons:
-		if score > i.Stats[stat]:
-			score -= i.Stats[stat]
-		else:
-			return i
+		if i.IsDead == False:
+			if score > i.Stats[stat]:
+				score -= i.Stats[stat]
+			else:
+				return i
 
 def choiceWithWeight(elements):
 	score = randint(1, sum(elements) - 1)
