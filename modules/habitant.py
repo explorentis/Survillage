@@ -65,10 +65,7 @@ class Habitant():
 		return heroName
 
 	def printName(self):
-		mark = ""
-		if self.IsHabitant == True:
-			mark = " *"
-		return self.Description['Name'] + ' ' + self.Description['Patronymic'] + ' ' + self.Description['LastName'] + mark
+		return self.Description['Name'] + ' ' + self.Description['Patronymic'] + ' ' + self.Description['LastName']
 
 	def printStats(self):
 		return 'Str', self.Stats['Strenght'], 'Dex', self.Stats['Dexterity'], 'End', self.Stats['Endurance'], 'Acc', self.Stats['Accuracy'], 'Val', self.Stats['Valor'], 'Cau', self.Stats['Caution']
@@ -78,14 +75,7 @@ class Habitant():
 		print 'Str', self.Stats['Strenght'], 'Dex', self.Stats['Dexterity'], 'End', self.Stats['Endurance'], 'Acc', self.Stats['Accuracy'], 'Val', self.Stats['Valor'], 'Cau', self.Stats['Caution']
 		print 'HP', self.HP
 		print 'Wave of Birth', self.WoB
-		if self.IsDead:
-			print 'It is dead'
-		else:
-			print 'It is alive'
-		if self.IsHabitant:
-			print 'It is habitant'
-		else:
-			print 'It is enemy'
+		print 'Target:', self.Target.printName()
 		print '-' * 20
 
 	def hitting(self):
@@ -106,11 +96,11 @@ class Habitant():
 					if len(listEnemy) != 0:
 						targetToHelp = selectPerson('Valor', listEnemy)
 				if targetToHelp is None:
-					if self.IsHabitant == True:
-						self.Target = choice(listEnemy)
+					print self.printName() + "It can help nobody"
+					if self.IsHabitant == False:
+						self.Target = listHabitant[0]
 					else:
-						self.Target = choice(listHabitant)
-					print "It can help nobody"
+						self.Target = listEnemy[0]
 				else:
 					self.Target = targetToHelp.Target
 					print self.printName() + ' select new target: ' + self.Target.printName()
@@ -133,11 +123,8 @@ class Habitant():
 						if len(listEnemy) != 0:
 							targetToHelp = selectPerson('Valor', listEnemy)
 					if targetToHelp is None:
-						if self.IsHabitant == True:
-							self.Target = choice(listEnemy)
-						else:
-							self.Target = choice(listHabitant)
-						print "It can help nobody"
+						self.Target = self
+						print self.printName() + "It can help nobody"
 					else:
 						self.Target = targetToHelp.Target
 						print self.printName() + ' select new target: ' + self.Target.printName()

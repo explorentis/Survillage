@@ -36,7 +36,7 @@ def selectPerson(stat, listPersons):
 			if score > person.Stats[stat]:
 				score -= person.Stats[stat]
 			else:
-				return person.Target
+				return person
 
 def choiceWithWeight(elements):
 	score = randint(1, sum(elements) - 1)

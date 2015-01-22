@@ -1,6 +1,9 @@
+0.0.9
+* bug B1 is return, fixed
+
 0.0.8
 * bugfix: fixed changes of maximal parameters value of enemy (before it was only 1, now equal maxValueOfParameters)
-* bugfix: sometimes fighters select wrong enemy: dead or ally, now it fixed
+* bugfix: sometimes fighters select wrong enemy: dead or ally, now it fixed (B1)
 
 0.0.6
 * bugfix: select next opponent from living

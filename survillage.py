@@ -7,7 +7,9 @@ listHabitant.append(Habitant())
 listHabitant[0].IsHabitant = True
 
 while len(listHabitant) != 0:
-	print "=" * 10, "It was", wave, "wave from foundation first village", "=" * 10
+	print
+	print "=" * 10, "It was", wave, "wave from foundation village", "=" * 10
+	print
 	# Happy new wave!! Yo-ho-ho!!
 	for habitant in listHabitant:
 		enemy = Habitant()
