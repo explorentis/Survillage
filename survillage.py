@@ -1,14 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+from modules.global_vars 	import listHabitant, listEnemy, getTime, incTime
 from modules.habitant 		import Habitant
-from modules.global_vars 	import listHabitant, listEnemy, wave
 
 listHabitant.append(Habitant())
 listHabitant[0].IsHabitant = True
 
 while len(listHabitant) != 0:
 	print
-	print "=" * 10, "It was", wave, "wave from foundation village", "=" * 10
+	print "=" * 10, "It was", getTime(), "wave from foundation village", "=" * 10
 	print
 	# Happy new wave!! Yo-ho-ho!!
 	for habitant in listHabitant:
@@ -43,5 +43,5 @@ while len(listHabitant) != 0:
 		habitant.HP = habitant.Stats['Endurance']
 		newHabitant.append(Habitant(habitant))
 	listHabitant += newHabitant
-	wave += 1
+	incTime()
 	raw_input('Press any key to next wave')

@@ -1,3 +1,6 @@
+0.0.10
+* ugly fix of Wave-of-Birth Bug (before all habitants born with WoB(wave of birth) = 0)
+
 0.0.9
 * bug B1 is return, fixed
 

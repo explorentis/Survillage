@@ -1,11 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from random		import choice, randint
-from global_vars	import maxValueOfParameters, listEnemy, listHabitant, wave
+from global_vars	import maxValueOfParameters, listEnemy, listHabitant, getTime, incTime
 from filereader 	import namesList, ending, heroEnding
 from dice 		import putDice, selectPerson, choiceWithWeight
 from assistants 	import mutateString, removeHabitant
 from math		import sqrt
+
+print '*' * 300
 
 class Habitant():
 	def __init__(self, ancestor = None):
@@ -48,7 +50,7 @@ class Habitant():
 		self.HP = self.Stats['Endurance']
 		self.Target = None
 		# wave of birth (see comment to wave in global_vars):
-		self.WoB = wave
+		self.WoB = getTime()
 		if ancestor is not None:
 			self.mutate()
 			print "New habitant was born: ", self.printName(), self.printStats()
@@ -192,7 +194,7 @@ class Habitant():
 					if hero.Stats[stat] > maxValueOfParameters:
 						maxValueOfParameters = hero.Stats[stat]
 				if mutationHeroType == 5:
-					hero.WoB += randint(-round(sqrt(wave - hero.WoB)), round(sqrt(wave - hero.WoB)))
+					hero.WoB += randint(-round(sqrt(getTime() - hero.WoB)), round(sqrt(getTime() - hero.WoB)))
 
 	def replaceHero(self, stat):
 		if self.Stats[stat] > self.Heroes[stat].Stats[stat]:
