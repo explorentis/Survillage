@@ -96,7 +96,7 @@ class Habitant():
 					if len(listEnemy) != 0:
 						targetToHelp = selectPerson('Valor', listEnemy)
 				if targetToHelp is None:
-					print self.printName() + "It can help nobody"
+					print self.printName() + ": It can help nobody"
 					if self.IsHabitant == False:
 						self.Target = listHabitant[0]
 					else:

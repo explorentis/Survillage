@@ -33,7 +33,8 @@ while len(listHabitant) != 0:
 		if len(listHabitant) == 0:
 			print "All habitants is die. Game over"
 		elif len(listEnemy) == 0:
-			print "All enemy is die. Battle end"
+			print("All enemy is die")
+			raw_input("Battle end, press any key")
 		else:
 			raw_input('Press any key to next turn of battle')
 	# make love not war:
