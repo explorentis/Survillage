@@ -12,4 +12,5 @@ namesList = readFile('strings/names.txt')
 ending = readFile('strings/ending.txt')[0]
 # end for last name
 heroEnding = readFile('strings/heroending.txt')[0]
-
+####for translate:####
+codePage = readFile('strings/coding.txt')[0]

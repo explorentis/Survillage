@@ -1,3 +1,8 @@
+0.1.2
+* check codepage of strings in directory "strings" (m)
+* fix bug binded with B1 - sometimes no one want to select fight partner (p)
+* add timer for battle: at finish it you can see battle duration (p)
+
 0.0.10
 * ugly fix of Wave-of-Birth Bug (before all habitants born with WoB(wave of birth) = 0)
 

@@ -7,8 +7,6 @@ from dice 		import putDice, selectPerson, choiceWithWeight
 from assistants 	import mutateString, removeHabitant
 from math		import sqrt
 
-print '*' * 300
-
 class Habitant():
 	def __init__(self, ancestor = None):
 		if ancestor is None:
@@ -98,11 +96,14 @@ class Habitant():
 					if len(listEnemy) != 0:
 						targetToHelp = selectPerson('Valor', listEnemy)
 				if targetToHelp is None:
-					print self.printName() + ": It can help nobody"
-					if self.IsHabitant == False:
-						self.Target = listHabitant[0]
+					if self.IsHabitant == True and len(listEnemy) != 0:
+						self.Target = choice(listEnemy)
+						print self.printName() + ' select new target: ' + self.Target.printName()
+					elif self.IsHabitant == False and len(listHabitant) != 0:
+						self.Target = choice(listHabitant)
+						print self.printName() + ' select new target: ' + self.Target.printName()
 					else:
-						self.Target = listEnemy[0]
+						print self.printName() + ": waiting for battle finish"
 				else:
 					self.Target = targetToHelp.Target
 					print self.printName() + ' select new target: ' + self.Target.printName()
@@ -126,7 +127,7 @@ class Habitant():
 							targetToHelp = selectPerson('Valor', listEnemy)
 					if targetToHelp is None:
 						self.Target = self
-						print self.printName() + "It can help nobody"
+						print self.printName() + " cannot help anybody"
 					else:
 						self.Target = targetToHelp.Target
 						print self.printName() + ' select new target: ' + self.Target.printName()
@@ -144,29 +145,29 @@ class Habitant():
 		if mutationType == 1:	# namelist mutation
 			nameId = randint(0, len(namesList))
 			namesList[nameId] = mutateString(namesList[nameId], mutationEvent).capitalize()
-		if mutationType == 2:	# mutation of ending
+		elif mutationType == 2:	# mutation of ending
 			ending = mutateString(ending, mutationEvent)
-		if mutationType == 3:	# mutation of heroEnding
+		elif mutationType == 3:	# mutation of heroEnding
 			heroEnding = mutateString(heroEnding, mutationEvent)
-		if mutationType == 4:	# mutation of Stats
+		elif mutationType == 4:	# mutation of Stats
 			stat = choice(self.Stats.keys())
 			if mutationEvent == 1 and self.Stats[stat] > 1:
 				print "Mutation: decrease of", stat
 				self.Stats[stat] -= 1
-			if mutationEvent == 2:
+			elif mutationEvent == 2:
 				print "Mutation: increase of", stat
 				self.Stats[stat] += 1
 				self.replaceHero(stat)
-			if mutationEvent == 3 and self.Stats[stat] > 1:
+			elif mutationEvent == 3 and self.Stats[stat] > 1:
 				print "Mutation:", stat, "overrepresentation"
 				self.Stats[stat] -= 1
 				# Dictionary here is relations between stats: what tuples is binded:
 				self.Stats[{'Strenght' : 'Dexterity', 'Dexterity' : 'Strenght', 'Endurance' : 'Accuracy', 'Accuracy' : 'Endurance', 'Valor' : 'Caution', 'Caution' : 'Valor'}[stat]] += 1
 				#.
 				self.replaceHero(stat)
-			if self.Stats[stat] > maxValueOfParameters:
+			elif self.Stats[stat] > maxValueOfParameters:
 				maxValueOfParameters = self.Stats[stat]
-		if mutationType == 5:	# mutation of memory about heroes
+		elif mutationType == 5:	# mutation of memory about heroes
 			hero = self.Heroes[choice(self.Stats.keys())]
 			if hero.IsDead == False:
 				return
@@ -176,24 +177,24 @@ class Habitant():
 				hero.printAllNotHeroes()
 				if mutationHeroType == 1:	# namelist mutation
 					hero.Description['Name'] = mutateString(hero.Description['Name'], mutationEvent).capitalize()
-				if mutationHeroType == 2:	# mutation of ending
+				elif mutationHeroType == 2:	# mutation of ending
 					hero.Description['Patronymic'] = mutateString(hero.Description['Patronymic'], mutationEvent).capitalize()
-				if mutationHeroType == 3:	# mutation of heroEnding
+				elif mutationHeroType == 3:	# mutation of heroEnding
 					hero.Description['LastName'] = mutateString(hero.Description['LastName'], mutationEvent).capitalize()
-				if mutationHeroType == 4:
+				elif mutationHeroType == 4:
 					stat = choice(hero.Stats.keys())
 					if mutationEvent == 1 and hero.Stats[stat] > 1:
 						hero.Stats[stat] -= 1
-					if mutationEvent == 2:
+					elif mutationEvent == 2:
 						hero.Stats[stat] += 1
-					if mutationEvent == 3 and hero.Stats[stat] > 1:
+					elif mutationEvent == 3 and hero.Stats[stat] > 1:
 						hero.Stats[stat] -= 1
 					# Dictionary here is relations between stats: what tuples is binded:
 						hero.Stats[{'Strenght' : 'Dexterity', 'Dexterity' : 'Strenght', 'Endurance' : 'Accuracy', 'Accuracy' : 'Endurance', 'Valor' : 'Caution', 'Caution' : 'Valor'}[stat]] += 1
 					#.
 					if hero.Stats[stat] > maxValueOfParameters:
 						maxValueOfParameters = hero.Stats[stat]
-				if mutationHeroType == 5:
+				elif mutationHeroType == 5:
 					hero.WoB += randint(-round(sqrt(getTime() - hero.WoB)), round(sqrt(getTime() - hero.WoB)))
 
 	def replaceHero(self, stat):

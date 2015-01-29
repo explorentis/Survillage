@@ -1,8 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from random import randint, choice
-from filereader import readFile
+from filereader import readFile, codePage
 from global_vars import listHabitant, listEnemy
+
+if codePage == "utf-8":
+	charlen = 2
+else:
+	charlen = 1
 
 # for eventId look at mutate function in Habitant class
 def mutateString(string, eventId):
@@ -11,14 +16,14 @@ def mutateString(string, eventId):
 	if eventId == 0:
 		return string
 	if eventId == 1:
-		numberSymbol = 2 * randint(0, len(string.decode('utf-8')) - 1)
-		return string[:numberSymbol] + string[numberSymbol + 2:]
+		numberSymbol = charlen * randint(0, len(string.decode('utf-8')) - 1)
+		return string[:numberSymbol] + string[numberSymbol + charlen:]
 	elif eventId == 2:
-		numberSymbol = 2 * randint(0, len(string.decode('utf-8')))
+		numberSymbol = charlen * randint(0, len(string.decode('utf-8')))
 		return string[:numberSymbol] + newLetter + string[numberSymbol:]
 	elif eventId == 3:
-		numberSymbol = 2 * randint(0, len(string.decode('utf-8')) - 1)
-		return string[:numberSymbol] + newLetter + string[numberSymbol + 2:]
+		numberSymbol = charlen * randint(0, len(string.decode('utf-8')) - 1)
+		return string[:numberSymbol] + newLetter + string[numberSymbol + charlen:]
 
 def removeHabitant(hero):
 	if hero.IsDead == False:

@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
 # Habitants measure time in waves, not years or days:
 
 wave = 0
