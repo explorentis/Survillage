@@ -25,18 +25,19 @@ Parameters:
 Return values:
 Returns person (pointer to it)
 '''
-def selectPerson(stat, listPersons):
+def selectPerson(stat, listAlly, itself):
+	personsInBattle = []
 	weightSum = 0
-	for person in listPersons:
-		if person.Target.IsDead == False:
+	for person in listAlly:
+		if (person.Target.IsDead == False) and (person.IsDead == False) and (itself != person):
 			weightSum += person.Stats[stat]
+			personsInBattle.append(person)
 	score = randint(0, weightSum)
-	for person in listPersons:
-		if person.Target.IsDead == False:
-			if score > person.Stats[stat]:
-				score -= person.Stats[stat]
-			else:
-				return person
+	for person in personInBattle:
+		if score > person.Stats[stat]:
+			score -= person.Stats[stat]
+		else:
+			return person
 
 def choiceWithWeight(elements):
 	score = randint(1, sum(elements) - 1)

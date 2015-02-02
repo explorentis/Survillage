@@ -12,7 +12,6 @@ else:
 # for eventId look at mutate function in Habitant class
 def mutateString(string, eventId):
 	newLetter = choice(readFile('strings/alphabet.txt'))
-	# TODO: Trooble with size of utf-8 coding characters: its have a 2 byte and i need in correcting address of symbol. But for other coding pages it is not need. I must have in mind it.
 	if eventId == 0:
 		return string
 	if eventId == 1:
@@ -38,3 +37,10 @@ def removeHabitant(hero):
 	for habitant in listEnemy:
 		if hero == habitant:
 			listEnemy.remove(hero)
+
+def getThatWhoHasAliveEnemy(listAlly):
+	result = []
+	for habitant in listAlly:
+		if habitant.Target.IsDead != False:
+			result.append(habitant)
+	return result

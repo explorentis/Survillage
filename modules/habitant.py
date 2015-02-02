@@ -4,7 +4,7 @@ from random		import choice, randint
 from global_vars	import maxValueOfParameters, listEnemy, listHabitant, getTime, incTime
 from filereader 	import namesList, ending, heroEnding
 from dice 		import putDice, selectPerson, choiceWithWeight
-from assistants 	import mutateString, removeHabitant
+from assistants 	import mutateString, removeHabitant, getThatWhoHasAliveEnemy
 from math		import sqrt
 
 class Habitant():
@@ -78,6 +78,41 @@ class Habitant():
 		print 'Target:', self.Target.printName()
 		print '-' * 20
 
+
+'''
+прийти на помощь:
+
+проверяем, есть ли враги, если нет - ждем окончания сражения
+смотрим, сражается ли кто из своих - составляем список и выбираем из него
+если никто не сражается, то выбираем из случайного врага
+
+составление списка:
+перебираем всех своих, если свой жив и враг его жив, то добавляем его, исключаем себя из списка
+'''
+	def goToHelp(self):
+		if self.IsHabitant:
+			goodList = listHabitant
+			badList = listEnemy
+		else:
+			goodList = listEnemy
+			badList = listHabitant
+
+		if len(badList) == 0:
+			print "All enemy is dead. Waiting for end of battle"
+			return False
+
+		if len(personsInBattle) < 2:
+			self.Target = choice(badList)
+			return True
+
+		self.Target = selectPerson('Valor', personsInBattle, itself).Target
+		return True
+
+	def die(self):
+		print self.Target.printName() + ' kill ' + self.printName()
+		self.IsDead = True
+		removeHabitant(self)
+
 	def hitting(self):
 		if self.IsDead == True:
 			print self.printName() + ' is dead'
@@ -85,51 +120,17 @@ class Habitant():
 		self.Target.Target = self
 		if self.Target.IsDead == True:
 			print self.printName() + ' look at body ' + self.Target.printName()
-			# Check if want help to other:
 			if putDice(self.Stats['Valor'], self.Stats['Caution']):
-				# Select target to help him
-				targetToHelp = None
-				if self.IsHabitant == True:
-					if len(listHabitant) != 0:
-						targetToHelp = selectPerson('Valor', listHabitant)
-				else:
-					if len(listEnemy) != 0:
-						targetToHelp = selectPerson('Valor', listEnemy)
-				if targetToHelp is None:
-					if self.IsHabitant == True and len(listEnemy) != 0:
-						self.Target = choice(listEnemy)
-						print self.printName() + ' select new target: ' + self.Target.printName()
-					elif self.IsHabitant == False and len(listHabitant) != 0:
-						self.Target = choice(listHabitant)
-						print self.printName() + ' select new target: ' + self.Target.printName()
-					else:
-						print self.printName() + ": waiting for battle finish"
-				else:
-					self.Target = targetToHelp.Target
+				if self.goToHelp():
 					print self.printName() + ' select new target: ' + self.Target.printName()
 			return
 		if putDice(self.Stats['Accuracy'], self.Target.Stats['Dexterity']):
 			self.Target.HP -= self.Stats['Strenght']
 			print self.printName() + ' hurts ' + self.Target.printName()
 			if self.Target.HP < 1:
-				print self.printName() + ' kill ' + self.Target.printName()
-				self.Target.IsDead = True
-				removeHabitant(self.Target)
-				# Check if want help to other:
+				self.Target.die()
 				if putDice(self.Stats['Valor'], self.Stats['Caution']):
-					# Select target to help him
-					targetToHelp = None
-					if self.IsHabitant == True:
-						if len(listHabitant) != 0:
-							targetToHelp = selectPerson('Valor', listHabitant)
-					else:
-						if len(listEnemy) != 0:
-							targetToHelp = selectPerson('Valor', listEnemy)
-					if targetToHelp is None:
-						self.Target = self
-						print self.printName() + " cannot help anybody"
-					else:
-						self.Target = targetToHelp.Target
+					if self.goToHelp():
 						print self.printName() + ' select new target: ' + self.Target.printName()
 		else:
 			print self.printName() + ' missing to ' + self.Target.printName()
