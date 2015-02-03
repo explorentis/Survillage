@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 def readFile(filename):
-	with open(filename) as openedFile:
-		return openedFile.read()[:-1].split()
+    with open(filename) as openedFile:
+        return openedFile.read()[:-1].split()
 
 #######for import#######
 # list of names for persons
