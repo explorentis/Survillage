@@ -1,0 +1,2 @@
+game.need_action.end_wave Нажмите любую клавишу для запуска следующей волны
+game.need_action.end_turn_of_battle Нажмите любую клавишу для следующего раунда боя

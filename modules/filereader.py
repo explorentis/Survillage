@@ -4,7 +4,7 @@
 
 def readFile(filename):
     with open(filename) as openedFile:
-        return openedFile.read()[:-1].split()
+        return openedFile.read()[:-1].split('\n')
 
 #######for import#######
 # list of names for persons
@@ -15,3 +15,4 @@ ending = readFile('strings/ending.txt')[0]
 heroEnding = readFile('strings/heroending.txt')[0]
 ####for translate:####
 codePage = readFile('strings/coding.txt')[0]
+translation = readFile('strings/translate.txt')

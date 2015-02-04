@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+from modules.translate import t
 from modules.global_vars import listHabitant, listEnemy, getTime, incTime
 from modules.habitant import Habitant
 
@@ -48,4 +49,5 @@ while len(listHabitant) != 0:
         newHabitant.append(Habitant(habitant))
     listHabitant += newHabitant
     incTime()
-    raw_input('Press any key to next wave')
+#    raw_input('Press any key to next wave')
+    raw_input(t['game.need_action.end_wave'])
