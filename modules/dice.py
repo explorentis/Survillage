@@ -21,10 +21,13 @@ def putDice(goodInterval, badInterval):
 '''
 selectPerson
 Description:
-Use parameter @stat@ from Stats as weight and rely on it select random person from list @listPersons@
+Use parameter @stat@ from Stats as weight and rely on it select random person
+from list @listPersons@
 Parameters:
-(string) stat - name of parameter of person (from Stats) which will be used as weight (statistical expectation)
-(list of class Habitant instances) listPerson - list of person where from select random person
+(string) stat - name of parameter of person (from Stats) which will be used
+as weight (statistical expectation)
+(list of class Habitant instances) listPerson - list of person where from
+select random person
 Return values:
 Returns person (pointer to it)
 '''

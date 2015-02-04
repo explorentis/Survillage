@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from random import choice, randint
-from global_vars import maxValueOfParameters, listEnemy, listHabitant, getTime, incTime
+from global_vars import maxValueOfParameters, listEnemy, listHabitant, getTime
 from filereader import namesList, ending, heroEnding
 from dice import putDice, selectPerson, choiceWithWeight
 from assistants import mutateString, removeHabitant, getThatWhoHasAliveEnemy
@@ -11,9 +11,9 @@ from math import sqrt
 class Habitant():
     def __init__(self, ancestor=None):
         if ancestor is None:
-            self.Description = {'Name': choice(namesList),
+            self.Description = {'LastName': choice(namesList) + heroEnding,
                                 'Patronymic': choice(namesList) + ending,
-                                'LastName': choice(namesList) + heroEnding}
+                                'Name': choice(namesList)}
             self.Stats = {'Strenght': randint(1, maxValueOfParameters),
                           'Dexterity': randint(1, maxValueOfParameters),
                           'Endurance': randint(1, maxValueOfParameters),
@@ -28,9 +28,10 @@ class Habitant():
                            'Caution': self}
             self.IsHabitant = False
         else:
-            self.Description = {'Name': choice(namesList),
-                                'Patronymic': ancestor.Description['Name'] + ending,
-                                'LastName': self.getHeroName(ancestor.Heroes) + heroEnding}
+            self.Description = {
+                'LastName': self.getHeroName(ancestor.Heroes) + heroEnding,
+                'Patronymic': ancestor.Description['Name'] + ending,
+                'Name': choice(namesList)}
             self.Stats = {'Strenght': ancestor.Stats['Strenght'],
                           'Dexterity': ancestor.Stats['Dexterity'],
                           'Endurance': ancestor.Stats['Endurance'],
@@ -52,45 +53,36 @@ class Habitant():
         self.WoB = getTime()
         if ancestor is not None:
             self.mutate()
-            print "New habitant was born: ", self.printName(), self.printStats()
-
+            print "New habitant was born:", self.printName(), self.printStats()
 
     def getHeroName(self, heroes):
         maxValue = 0
         heroName = ''
-        for name_of_hero_and_stat in heroes:
-            # check only parameter "strenght" at strong hero, parameter "dextery" at dexterous hero etc...
-            if heroes[name_of_hero_and_stat].Stats[name_of_hero_and_stat] > maxValue:
-                maxValue = heroes[name_of_hero_and_stat].Stats[name_of_hero_and_stat]
-                heroName = heroes[name_of_hero_and_stat].Description['Name']
+        for statName in heroes:
+            # check only parameter "strenght" at strong hero, parameter
+            # "dextery" at dexterous hero etc...
+            if heroes[statName].Stats[statName] > maxValue:
+                maxValue = heroes[statName].Stats[statName]
+                heroName = heroes[statName].Description['Name']
         return heroName
 
     def printName(self):
         return self.Description['Name'] + ' ' + self.Description['Patronymic'] + ' ' + self.Description['LastName']
 
     def printStats(self):
-        return 'Str', self.Stats['Strenght'], 'Dex', self.Stats['Dexterity'], 'End', self.Stats['Endurance'], 'Acc', \
-               self.Stats['Accuracy'], 'Val', self.Stats['Valor'], 'Cau', self.Stats['Caution']
+        return 'Str', self.Stats['Strenght'], 'Dex', self.Stats['Dexterity'], \
+            'End', self.Stats['Endurance'], 'Acc', self.Stats['Accuracy'], \
+            'Val', self.Stats['Valor'], 'Cau', self.Stats['Caution']
 
     def printAllNotHeroes(self):  # пока не все параметры (например, нет WoB)
-        print self.Description['Name'], self.Description['Patronymic'], self.Description['LastName']
-        print 'Str', self.Stats['Strenght'], 'Dex', self.Stats['Dexterity'], 'End', self.Stats['Endurance'], 'Acc', \
-            self.Stats['Accuracy'], 'Val', self.Stats['Valor'], 'Cau', self.Stats['Caution']
+        print self.printName()
+        print 'Str', self.Stats['Strenght'], 'Dex', self.Stats['Dexterity'], \
+            'End', self.Stats['Endurance'], 'Acc', self.Stats['Accuracy'], \
+            'Val', self.Stats['Valor'], 'Cau', self.Stats['Caution']
         print 'HP', self.HP
         print 'Wave of Birth', self.WoB
         print 'Target:', self.Target.printName()
         print '-' * 20
-
-    '''
-    прийти на помощь:
-
-    проверяем, есть ли враги, если нет - ждем окончания сражения
-    смотрим, сражается ли кто из своих - составляем список и выбираем из него
-    если никто не сражается, то выбираем из случайного врага
-
-    составление списка:
-    перебираем всех своих, если свой жив и враг его жив, то добавляем его, исключаем себя из списка
-    '''
 
     def goToHelp(self):
         if self.IsHabitant:
@@ -104,19 +96,18 @@ class Habitant():
             print "All enemy is dead. Waiting for end of battle"
             return False
 
-        if len(personsInBattle) < 2: # todo: unresolved reference
+        personsInBattle = getThatWhoHasAliveEnemy(goodList)
+        if len(personsInBattle) < 2:
             self.Target = choice(badList)
             return True
 
-        self.Target = selectPerson('Valor', personsInBattle, itself).Target # todo: unresolved reference
+        self.Target = selectPerson('Valor', personsInBattle, self).Target
         return True
-
 
     def die(self):
         print self.Target.printName() + ' kill ' + self.printName()
         self.IsDead = True
         removeHabitant(self)
-
 
     def hitting(self):
         if self.IsDead == True:
@@ -127,7 +118,8 @@ class Habitant():
             print self.printName() + ' look at body ' + self.Target.printName()
             if putDice(self.Stats['Valor'], self.Stats['Caution']):
                 if self.goToHelp():
-                    print self.printName() + ' select new target: ' + self.Target.printName()
+                    print self.printName() + ' select new target: ' + \
+                        self.Target.printName()
             return
         if putDice(self.Stats['Accuracy'], self.Target.Stats['Dexterity']):
             self.Target.HP -= self.Stats['Strenght']
@@ -136,16 +128,17 @@ class Habitant():
                 self.Target.die()
                 if putDice(self.Stats['Valor'], self.Stats['Caution']):
                     if self.goToHelp():
-                        print self.printName() + ' select new target: ' + self.Target.printName()
+                        print self.printName() + ' select new target: ' + \
+                            self.Target.printName()
         else:
             print self.printName() + ' missing to ' + self.Target.printName()
-
 
     def mutate(self):
         global ending
         global heroEnding
         global maxValueOfParameters
-        # 0 - nothing, 1 - name, 2 - ending, 3 - heroEnding, 4 - from stats, 5 - from Heroes
+        # 0 - nothing, 1 - name, 2 - ending, 3 - heroEnding,
+        # 4 - from stats, 5 - from Heroes
         mutationType = choiceWithWeight([0, 1, 1, 1, 8, 2])
         # 0 - nothing, 1 - delete, 2 - add, 3 - change
         mutationEvent = choiceWithWeight([1, 2, 2, 8])
@@ -168,7 +161,8 @@ class Habitant():
             elif mutationEvent == 3 and self.Stats[stat] > 1:
                 print "Mutation:", stat, "overrepresentation"
                 self.Stats[stat] -= 1
-                # Dictionary here is relations between stats: what tuples is binded:
+                # Dictionary here is relations between stats: what tuples 
+                # is binded:
                 self.Stats[
                     {'Strenght': 'Dexterity', 'Dexterity': 'Strenght', 'Endurance': 'Accuracy', 'Accuracy': 'Endurance',
                      'Valor': 'Caution', 'Caution': 'Valor'}[stat]] += 1
@@ -209,9 +203,7 @@ class Habitant():
                 elif mutationHeroType == 5:
                     hero.WoB += randint(-round(sqrt(getTime() - hero.WoB)), round(sqrt(getTime() - hero.WoB)))
 
-
     def replaceHero(self, stat):
         if self.Stats[stat] > self.Heroes[stat].Stats[stat]:
             removeHabitant(self.Heroes[stat])
             self.Heroes[stat] = self
-

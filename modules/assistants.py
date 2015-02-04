@@ -9,20 +9,21 @@ if codePage == "utf-8":
 else:
     charlen = 1
 
+
 # for eventId look at mutate function in Habitant class
 def mutateString(string, eventId):
-    newLetter = choice(readFile('strings/alphabet.txt'))
+    newChar = choice(readFile('strings/alphabet.txt'))
     if eventId == 0:
         return string
     if eventId == 1:
-        numberSymbol = charlen * randint(0, len(string.decode('utf-8')) - 1)
-        return string[:numberSymbol] + string[numberSymbol + charlen:]
+        numChar = charlen * randint(0, len(string.decode('utf-8')) - 1)
+        return string[:numChar] + string[numChar + charlen:]
     elif eventId == 2:
-        numberSymbol = charlen * randint(0, len(string.decode('utf-8')))
-        return string[:numberSymbol] + newLetter + string[numberSymbol:]
+        numChar = charlen * randint(0, len(string.decode('utf-8')))
+        return string[:numChar] + newChar + string[numChar:]
     elif eventId == 3:
-        numberSymbol = charlen * randint(0, len(string.decode('utf-8')) - 1)
-        return string[:numberSymbol] + newLetter + string[numberSymbol + charlen:]
+        numChar = charlen * randint(0, len(string.decode('utf-8')) - 1)
+        return string[:numChar] + newChar + string[numChar + charlen:]
 
 
 def removeHabitant(hero):
@@ -43,6 +44,6 @@ def removeHabitant(hero):
 def getThatWhoHasAliveEnemy(listAlly):
     result = []
     for habitant in listAlly:
-        if habitant.Target.IsDead != False:
+        if habitant.Target.IsDead == False:
             result.append(habitant)
     return result
