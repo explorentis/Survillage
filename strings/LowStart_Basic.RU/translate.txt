@@ -1,0 +1,30 @@
+end_wave.need_action.game Нажмите любую клавишу для запуска следующей волны
+end_turn_of_battle.need_action.game Нажмите любую клавишу для следующего раунда боя
+end_battle.need_action.game Битва закончилась, нажмите любую клавишу
+battle_duration.info.game Длительность боя %d сек.
+all_enemy_die.info.game Все враги мертвы
+game_over.info.game Все Обитатели мертвы. Конец игры
+enemies_turn.info.game Ходят враги
+habitants_turn.info.game Ходят Обитатели
+enemies.label.game Враги
+habitants.label.game Обитатели
+wave.label.game %s Волна %d от основания поселения %s
+new_habitant.info.village Родился новый Обитатель:
+target.parameter.habitant Цель:
+wob.parameter.habitant Волна рождения:
+waiting_end_battle.action.habitant : Все враги мертвы, дожидаюсь конца битвы
+kill.action.habitant убило
+dead.action.habitant мертво
+look_at_body.action.habitant смотрит на тело
+new_target.action.habitant теперь атакует
+hurts.action.habitant ранило
+miss.action.habitant промахнулось по
+decrease.mutation.habitant Мутация: уменьшилась
+Strenght.parameter.habitant сила
+Dexterity.parameter.habitant ловкость
+Endurance.parameter.habitant выносливость
+Accuracy.parameter.habitant точность
+Valor.parameter.habitant смелость
+Caution.parameter.habitant осторожность
+increase.mutation.habitant Мутация: увеличилась
+overrepresentation.mutation.habitant Мутация: %s перераспределилась

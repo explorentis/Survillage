@@ -1,3 +1,7 @@
+0.2.0
+* National language support present
+* Multiprofile support
+
 0.1.5
 * Fix some errors
 * Crusat partially change code according to PEP8

@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+from translate import t
 from random import choice, randint
 from global_vars import maxValueOfParameters, listEnemy, listHabitant, getTime
 from filereader import namesList, ending, heroEnding
@@ -53,7 +54,7 @@ class Habitant():
         self.WoB = getTime()
         if ancestor is not None:
             self.mutate()
-            print "New habitant was born:", self.printName(), self.printStats()
+            print t["new_habitant.info.village"], self.printName(), self.printStats()
 
     def getHeroName(self, heroes):
         maxValue = 0
@@ -80,8 +81,8 @@ class Habitant():
             'End', self.Stats['Endurance'], 'Acc', self.Stats['Accuracy'], \
             'Val', self.Stats['Valor'], 'Cau', self.Stats['Caution']
         print 'HP', self.HP
-        print 'Wave of Birth', self.WoB
-        print 'Target:', self.Target.printName()
+        print t['wob.parameter.habitant'], self.WoB
+        print t['target.parameter.habitant'], self.Target.printName()
         print '-' * 20
 
     def goToHelp(self):
@@ -93,7 +94,7 @@ class Habitant():
             badList = listHabitant
 
         if len(badList) == 0:
-            print "All enemy is dead. Waiting for end of battle"
+            print self.printName() + t['waiting_end_battle.action.habitant']
             return False
 
         personsInBattle = getThatWhoHasAliveEnemy(goodList)
@@ -105,33 +106,32 @@ class Habitant():
         return True
 
     def die(self):
-        print self.Target.printName() + ' kill ' + self.printName()
+        print self.Target.printName(), t['kill.action.habitant'], self.printName()
         self.IsDead = True
         removeHabitant(self)
 
     def hitting(self):
         if self.IsDead == True:
-            print self.printName() + ' is dead'
+            print self.printName() + t['dead.action.habitant']
             return
         self.Target.Target = self
         if self.Target.IsDead == True:
-            print self.printName() + ' look at body ' + self.Target.printName()
+            print self.printName(), t['look_at_body.action.habitant'], self.Target.printName()
             if putDice(self.Stats['Valor'], self.Stats['Caution']):
                 if self.goToHelp():
-                    print self.printName() + ' select new target: ' + \
+                    print self.printName(), t['new_target.action.habitant'], \
                         self.Target.printName()
             return
         if putDice(self.Stats['Accuracy'], self.Target.Stats['Dexterity']):
             self.Target.HP -= self.Stats['Strenght']
-            print self.printName() + ' hurts ' + self.Target.printName()
+            print self.printName(), t['hurts.action.habitant'], self.Target.printName()
             if self.Target.HP < 1:
                 self.Target.die()
                 if putDice(self.Stats['Valor'], self.Stats['Caution']):
                     if self.goToHelp():
-                        print self.printName() + ' select new target: ' + \
-                            self.Target.printName()
+                        print self.printName(), t['new_target.action.habitant'], self.Target.printName()
         else:
-            print self.printName() + ' missing to ' + self.Target.printName()
+            print self.printName(), t['miss.action.habitant'], self.Target.printName()
 
     def mutate(self):
         global ending
@@ -152,14 +152,14 @@ class Habitant():
         elif mutationType == 4:  # mutation of Stats
             stat = choice(self.Stats.keys())
             if mutationEvent == 1 and self.Stats[stat] > 1:
-                print "Mutation: decrease of", stat
+                print t["decrease.mutation.habitant"], t[stat + '.parameter.habitant']
                 self.Stats[stat] -= 1
             elif mutationEvent == 2:
-                print "Mutation: increase of", stat
+                print t["increase.mutation.habitant"], t[stat + '.parameter.habitant']
                 self.Stats[stat] += 1
                 self.replaceHero(stat)
             elif mutationEvent == 3 and self.Stats[stat] > 1:
-                print "Mutation:", stat, "overrepresentation"
+                print(t["overrepresentation.mutation.habitant"] % t[stat + '.parameter.habitant'])
                 self.Stats[stat] -= 1
                 # Dictionary here is relations between stats: what tuples 
                 # is binded:

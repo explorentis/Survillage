@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from random import randint, choice
-from filereader import readFile, codePage
+from filereader import readFile, codePage, alphabet
 from global_vars import listHabitant, listEnemy
+from translate import t
 
 if codePage == "utf-8":
     charlen = 2
@@ -12,7 +13,7 @@ else:
 
 # for eventId look at mutate function in Habitant class
 def mutateString(string, eventId):
-    newChar = choice(readFile('strings/alphabet.txt'))
+    newChar = choice(alphabet)
     if eventId == 0:
         return string
     if eventId == 1:
@@ -47,3 +48,5 @@ def getThatWhoHasAliveEnemy(listAlly):
         if habitant.Target.IsDead == False:
             result.append(habitant)
     return result
+
+
