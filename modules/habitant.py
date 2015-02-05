@@ -12,9 +12,10 @@ from math import sqrt
 class Habitant():
     def __init__(self, ancestor=None):
         if ancestor is None:
-            self.Description = {'LastName': choice(namesList) + heroEnding,
-                                'Patronymic': choice(namesList) + ending,
-                                'Name': choice(namesList)}
+            self.Description = {
+                'LastName': choice(namesList).capitalize() + heroEnding,
+                'Patronymic': choice(namesList).capitalize() + ending,
+                'Name': choice(namesList).capitalize()}
             self.Stats = {'Strenght': randint(1, maxValueOfParameters),
                           'Dexterity': randint(1, maxValueOfParameters),
                           'Endurance': randint(1, maxValueOfParameters),
@@ -32,7 +33,7 @@ class Habitant():
             self.Description = {
                 'LastName': self.getHeroName(ancestor.Heroes) + heroEnding,
                 'Patronymic': ancestor.Description['Name'] + ending,
-                'Name': choice(namesList)}
+                'Name': choice(namesList).capitalize()}
             self.Stats = {'Strenght': ancestor.Stats['Strenght'],
                           'Dexterity': ancestor.Stats['Dexterity'],
                           'Endurance': ancestor.Stats['Endurance'],

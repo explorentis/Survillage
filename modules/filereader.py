@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from os import listdir
+from locale import getpreferredencoding
 
 def readFile(filename):
     with open(filename) as openedFile:
@@ -11,10 +12,22 @@ def readFile(filename):
 count = 1
 print "Select profile to play:"
 for directory in listdir('strings'):
+    codePage = readFile('strings/' + directory + '/coding.txt')[0]
+    print getpreferredencoding()
     print
-    print str(count) + '.', directory, '\n', '\n'.join(readFile('strings/' + directory + '/description.txt'))
+    print str(count) + '.', directory, '\n',
+    if (getpreferredencoding() == codePage) or (codePage == "ISO_8859-1"):
+        print '\n'.join(readFile('strings/' + directory + '/description.txt'))
+    else:
+        print "WARNING: may be this profile is unsupportable."
     count += 1
-profilePath = 'strings/' + listdir('strings')[int(raw_input("I'm select profile number:")) - 1]
+while True:
+    try:
+        profilePath = 'strings/' + listdir('strings')[int(raw_input("I'm select profile number: ")) - 1]
+    except ValueError:
+        pass
+    else:
+        break
 #.
 
 #######for import#######

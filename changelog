@@ -1,3 +1,6 @@
+0.2.1
+* Fix few bugs (according issue #3)
+
 0.2.0
 * National language support present
 * Multiprofile support

@@ -48,4 +48,5 @@ while len(listHabitant) != 0:
         newHabitant.append(Habitant(habitant))
     listHabitant += newHabitant
     incTime()
-    raw_input(t['end_wave.need_action.game'])
+    if len(listHabitant) != 0:
+        raw_input(t['end_wave.need_action.game'])
