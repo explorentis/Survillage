@@ -1,3 +1,6 @@
+0.3.0
+* Add support rc-files for game. You can specify count of habitant and might.
+
 0.2.2
 * Expand constructor parameters for using any additional parameters, its preparing for other functionality expand
 

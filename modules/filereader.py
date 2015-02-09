@@ -42,3 +42,5 @@ heroEnding = read_file(profilePath + '/heroending.txt')[0]
 # =====for translate=====
 codePage = read_file(profilePath + '/coding.txt')[0]
 translation = read_file(profilePath + '/translate.txt')
+
+initScenario = read_file(profilePath + '/scenario.rc')

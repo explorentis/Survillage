@@ -1,11 +1,19 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from modules.translate import t
+from modules.scenario_parse import read_scenario
 from modules.global_vars import listHabitant, listEnemy, get_time, inc_time
 from modules.habitant import Habitant
 
-listHabitant.append(Habitant({}))
-listHabitant[0].IsHabitant = True
+initScenario = read_scenario()
+print initScenario
+if 'count' in initScenario:
+    for i in range(0, initScenario['count']):
+        listHabitant.append(Habitant(initScenario))
+        listHabitant[i].IsHabitant = True
+else:
+    listHabitant.append(Habitant(initScenario))
+    listHabitant[0].IsHabitant = True
 
 while len(listHabitant) != 0:
     print

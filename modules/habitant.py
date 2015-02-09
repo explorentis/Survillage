@@ -12,6 +12,7 @@ from math import sqrt
 # initParam: ancestor, maxValue
 class Habitant():
     def __init__(self, initParam):
+        global maxValueOfParameters
         if not 'maxValue' in initParam:
             initParam.update({'maxValue': maxValueOfParameters})
         if not 'ancestor' in initParam:
@@ -25,6 +26,9 @@ class Habitant():
                           'Accuracy': randint(1, initParam['maxValue']),
                           'Valor': randint(1, initParam['maxValue']),
                           'Caution': randint(1, initParam['maxValue'])}
+            for stat in self.Stats:
+                if self.Stats[stat] > maxValueOfParameters:
+                    maxValueOfParameters = self.Stats[stat]
             self.Heroes = {'Strenght': self,
                            'Dexterity': self,
                            'Endurance': self,
