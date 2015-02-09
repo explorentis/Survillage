@@ -169,7 +169,7 @@ class Habitant():
                      'Valor': 'Caution', 'Caution': 'Valor'}[stat]] += 1
                 # .
                 self.replace_hero(stat)
-            elif self.Stats[stat] > maxValueOfParameters:
+            if self.Stats[stat] > maxValueOfParameters:
                 maxValueOfParameters = self.Stats[stat]
         elif mutation_type == 5:  # mutation of memory about heroes
             hero = self.Heroes[choice(self.Stats.keys())]
