@@ -3,6 +3,8 @@ __author__ = 'explorentis'
 from filereader import initScenario
 
 def read_scenario():
+    if initScenario is None:
+        return
     initParam = {}
     for line in initScenario:
         line = line.split(' ')

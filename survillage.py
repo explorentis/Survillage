@@ -6,13 +6,16 @@ from modules.global_vars import listHabitant, listEnemy, get_time, inc_time
 from modules.habitant import Habitant
 
 initScenario = read_scenario()
-print initScenario
-if 'count' in initScenario:
-    for i in range(0, initScenario['count']):
+if initScenario is not None:
+    if 'count' in initScenario:
+        for i in range(0, initScenario['count']):
+            listHabitant.append(Habitant(initScenario))
+            listHabitant[i].IsHabitant = True
+    else:
         listHabitant.append(Habitant(initScenario))
-        listHabitant[i].IsHabitant = True
+        listHabitant[0].IsHabitant = True
 else:
-    listHabitant.append(Habitant(initScenario))
+    listHabitant.append(Habitant({}))
     listHabitant[0].IsHabitant = True
 
 while len(listHabitant) != 0:

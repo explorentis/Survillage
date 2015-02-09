@@ -1,3 +1,6 @@
+0.3.0a
+* Fix cant-find-rc-file error
+
 0.3.0
 * Add support rc-files for game. You can specify count of habitant and might.
 

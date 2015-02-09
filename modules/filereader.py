@@ -5,8 +5,11 @@ from locale import getpreferredencoding
 
 
 def read_file(filename):
-    with open(filename) as openedFile:
-        return openedFile.read()[:-1].split('\n')
+    try:
+        with open(filename) as openedFile:
+            return openedFile.read()[:-1].split('\n')
+    except:
+        print "FILE NOT FOUND:", filename
 
 
 # main menu
