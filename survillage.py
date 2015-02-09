@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from modules.translate import t
-from modules.global_vars import listHabitant, listEnemy, getTime, incTime
+from modules.global_vars import listHabitant, listEnemy, get_time, inc_time
 from modules.habitant import Habitant
 
 listHabitant.append(Habitant())
@@ -9,7 +9,7 @@ listHabitant[0].IsHabitant = True
 
 while len(listHabitant) != 0:
     print
-    print(t["wave.label.game"] % ("=" * 10, getTime(), "=" * 10))
+    print(t["wave.label.game"] % ("=" * 10, get_time(), "=" * 10))
     print
     # Happy new wave!! Yo-ho-ho!!
     for habitant in listHabitant:
@@ -23,10 +23,10 @@ while len(listHabitant) != 0:
         fightTime += 10
         print "+" * 10, t["habitants.label.game"], "+" * 10
         for habitant in listHabitant:
-            habitant.printAllNotHeroes()
+            habitant.print_all()
         print "+" * 10, t["enemies.label.game"], "+" * 10
         for enemy in listEnemy:
-            enemy.printAllNotHeroes()
+            enemy.print_all()
         print '=' * 5, t['habitants_turn.info.game'], '=' * 5
         for habitant in listHabitant:
             habitant.hitting()
@@ -47,6 +47,6 @@ while len(listHabitant) != 0:
         habitant.HP = habitant.Stats['Endurance']
         newHabitant.append(Habitant(habitant))
     listHabitant += newHabitant
-    incTime()
+    inc_time()
     if len(listHabitant) != 0:
         raw_input(t['end_wave.need_action.game'])

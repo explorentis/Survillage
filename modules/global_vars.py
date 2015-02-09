@@ -5,12 +5,12 @@
 wave = 0
 
 
-def getTime():
+def get_time():
     global wave
     return wave
 
 
-def incTime():
+def inc_time():
     global wave
     wave += 1
 
