@@ -1,3 +1,6 @@
+0.2.2
+* Expand constructor parameters for using any additional parameters, its preparing for other functionality expand
+
 0.2.1b
 * Fix tiny bug, which rise sometimes
 

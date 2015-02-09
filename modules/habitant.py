@@ -9,19 +9,22 @@ from assistants import mutate_string, remove_habitant, getThatWhoHasAliveEnemy
 from math import sqrt
 
 
+# initParam: ancestor, maxValue
 class Habitant():
-    def __init__(self, ancestor=None):
-        if ancestor is None:
+    def __init__(self, initParam):
+        if not 'maxValue' in initParam:
+            initParam.update({'maxValue': maxValueOfParameters})
+        if not 'ancestor' in initParam:
             self.Description = {
                 'LastName': choice(names_list).capitalize() + heroEnding,
                 'Patronymic': choice(names_list).capitalize() + ending,
                 'Name': choice(names_list).capitalize()}
-            self.Stats = {'Strenght': randint(1, maxValueOfParameters),
-                          'Dexterity': randint(1, maxValueOfParameters),
-                          'Endurance': randint(1, maxValueOfParameters),
-                          'Accuracy': randint(1, maxValueOfParameters),
-                          'Valor': randint(1, maxValueOfParameters),
-                          'Caution': randint(1, maxValueOfParameters)}
+            self.Stats = {'Strenght': randint(1, initParam['maxValue']),
+                          'Dexterity': randint(1, initParam['maxValue']),
+                          'Endurance': randint(1, initParam['maxValue']),
+                          'Accuracy': randint(1, initParam['maxValue']),
+                          'Valor': randint(1, initParam['maxValue']),
+                          'Caution': randint(1, initParam['maxValue'])}
             self.Heroes = {'Strenght': self,
                            'Dexterity': self,
                            'Endurance': self,
@@ -31,21 +34,21 @@ class Habitant():
             self.IsHabitant = False
         else:
             self.Description = {
-                'LastName': self.get_heroname(ancestor.Heroes) + heroEnding,
-                'Patronymic': ancestor.Description['Name'] + ending,
+                'LastName': self.get_heroname(initParam['ancestor'].Heroes) + heroEnding,
+                'Patronymic': initParam['ancestor'].Description['Name'] + ending,
                 'Name': choice(names_list).capitalize()}
-            self.Stats = {'Strenght': ancestor.Stats['Strenght'],
-                          'Dexterity': ancestor.Stats['Dexterity'],
-                          'Endurance': ancestor.Stats['Endurance'],
-                          'Accuracy': ancestor.Stats['Accuracy'],
-                          'Valor': ancestor.Stats['Valor'],
-                          'Caution': ancestor.Stats['Caution']}
-            self.Heroes = {'Strenght': ancestor.Heroes['Strenght'],
-                           'Dexterity': ancestor.Heroes['Dexterity'],
-                           'Endurance': ancestor.Heroes['Endurance'],
-                           'Accuracy': ancestor.Heroes['Accuracy'],
-                           'Valor': ancestor.Heroes['Valor'],
-                           'Caution': ancestor.Heroes['Caution']}
+            self.Stats = {'Strenght': initParam['ancestor'].Stats['Strenght'],
+                          'Dexterity': initParam['ancestor'].Stats['Dexterity'],
+                          'Endurance': initParam['ancestor'].Stats['Endurance'],
+                          'Accuracy': initParam['ancestor'].Stats['Accuracy'],
+                          'Valor': initParam['ancestor'].Stats['Valor'],
+                          'Caution': initParam['ancestor'].Stats['Caution']}
+            self.Heroes = {'Strenght': initParam['ancestor'].Heroes['Strenght'],
+                           'Dexterity': initParam['ancestor'].Heroes['Dexterity'],
+                           'Endurance': initParam['ancestor'].Heroes['Endurance'],
+                           'Accuracy': initParam['ancestor'].Heroes['Accuracy'],
+                           'Valor': initParam['ancestor'].Heroes['Valor'],
+                           'Caution': initParam['ancestor'].Heroes['Caution']}
             self.IsHabitant = True
 
         self.IsDead = False
@@ -53,7 +56,7 @@ class Habitant():
         self.Target = None
         # wave of birth (see comment to wave in global_vars):
         self.WoB = get_time()
-        if ancestor is not None:
+        if 'ancestor' in initParam:
             self.mutate()
             print t["new_habitant.info.village"], self.print_name(), self.print_stats()
 

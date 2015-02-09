@@ -4,7 +4,7 @@ from modules.translate import t
 from modules.global_vars import listHabitant, listEnemy, get_time, inc_time
 from modules.habitant import Habitant
 
-listHabitant.append(Habitant())
+listHabitant.append(Habitant({}))
 listHabitant[0].IsHabitant = True
 
 while len(listHabitant) != 0:
@@ -13,7 +13,7 @@ while len(listHabitant) != 0:
     print
     # Happy new wave!! Yo-ho-ho!!
     for habitant in listHabitant:
-        enemy = Habitant()
+        enemy = Habitant({})
         listEnemy.append(enemy)
         habitant.Target = enemy
         enemy.Target = habitant
@@ -45,7 +45,7 @@ while len(listHabitant) != 0:
     newHabitant = []
     for habitant in listHabitant:
         habitant.HP = habitant.Stats['Endurance']
-        newHabitant.append(Habitant(habitant))
+        newHabitant.append(Habitant({'ancestor': habitant}))
     listHabitant += newHabitant
     inc_time()
     if len(listHabitant) != 0:
