@@ -1,3 +1,7 @@
+0.5.0
+* Changed probabilities of different mutation: probability mutate stats is increased
+* 3 types of attack now: many weak enemy, enemy with equal count and might and few very strong enemy
+
 0.4.0
 * Delete most profiles, you can create it yourself. Its rely with providing actual translate and config-file (too many
 time are need to updating all profiles)

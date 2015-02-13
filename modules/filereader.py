@@ -17,7 +17,6 @@ count = 1
 print "Select profile to play:"
 for directory in listdir('strings'):
     codePage = read_file('strings/' + directory + '/coding.txt')[0]
-    print getpreferredencoding()
     print
     print str(count) + '.', directory.replace('.', ' (', 1).replace('_', ' ') + ')\n',
     if (getpreferredencoding() == codePage) or (codePage == "ISO_8859-1"):

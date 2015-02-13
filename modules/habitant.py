@@ -6,7 +6,7 @@ from global_vars import maxValueOfParameters, get_time
 from filereader import names_list, ending, heroEnding
 from dice import putDice, selectPerson, choiceWithWeight
 from assistants import mutate_string, remove_habitant, getThatWhoHasAliveEnemy
-from math import sqrt
+from math import sqrt, ceil
 
 
 # initParam: ancestor, maxValue
@@ -15,6 +15,8 @@ class Habitant():
         global maxValueOfParameters
         if 'maxValue' not in init_param:
             init_param.update({'maxValue': maxValueOfParameters})
+        if 'modifyMaxValue' in init_param:
+            init_param.update({'maxValue': int(ceil(init_param['maxValue'] * init_param['modifyMaxValue']))})
         if 'ancestor' not in init_param:
             self.Description = {
                 'LastName': choice(names_list).capitalize() + heroEnding,
@@ -26,9 +28,10 @@ class Habitant():
                           'Accuracy': randint(1, init_param['maxValue']),
                           'Valor': randint(1, init_param['maxValue']),
                           'Caution': randint(1, init_param['maxValue'])}
-            for stat in self.Stats:
-                if self.Stats[stat] > maxValueOfParameters:
-                    maxValueOfParameters = self.Stats[stat]
+            if 'modifyMaxValue' not in init_param:
+                for stat in self.Stats:
+                    if self.Stats[stat] > maxValueOfParameters:
+                        maxValueOfParameters = self.Stats[stat]
             self.Heroes = {'Strenght': self,
                            'Dexterity': self,
                            'Endurance': self,
@@ -120,6 +123,8 @@ class Habitant():
                         self.Target.print_name()
                 else:
                     return
+            else:
+                return
         if self.IsDead:
             print self.print_name(), t['dead.action.habitant']
             return
@@ -148,10 +153,12 @@ class Habitant():
         global maxValueOfParameters
         # 0 - nothing, 1 - name, 2 - ending, 3 - heroEnding,
         # 4 - from stats, 5 - from Heroes
-        mutation_type = choiceWithWeight([0, 1, 1, 1, 8, 2])
+        mutation_type = choiceWithWeight([0, 1, 1, 1, 16, 2])
         # 0 - nothing, 1 - delete, 2 - add, 3 - change
         mutation_event = choiceWithWeight([1, 2, 2, 8])
-        if mutation_type == 1:  # namelist mutation
+        if mutation_type == 0:
+            print "Mutate nothing"
+        elif mutation_type == 1:  # namelist mutation
             name_id = randint(0, len(names_list))
             names_list[name_id] = mutate_string(names_list[name_id], mutation_event).capitalize()
         elif mutation_type == 2:  # mutation of ending

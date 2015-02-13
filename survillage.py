@@ -5,7 +5,7 @@ from modules.scenario_parse import read_scenario
 from modules.global_vars import listHabitant, listEnemy, get_time, inc_time, maxValueOfParameters
 from modules.habitant import Habitant
 from modules.village import Village
-from random import choice
+from modules.events import next_event
 
 initScenario = read_scenario()
 if initScenario is not None:
@@ -22,8 +22,10 @@ while village.size() != 0:
     print(t["wave.label.game"] % ("=" * 10, get_time(), "=" * 10))
     print
     # Happy new wave!! Yo-ho-ho!!
-    foes = Village(village.size(), {})
-    village.attack(foes)
+    #foes = Village(village.size(), {})
+    #village.attack(foes)
+    foes = next_event(village)
+    foes.attack(village)
     # fight
     fightTime = 0
     while foes.size() != 0 and village.size() != 0:

@@ -29,3 +29,6 @@ Caution.parameter.habitant осторожность
 increase.mutation.habitant Мутация: увеличилась
 overrepresentation.mutation.habitant Мутация: %s перераспределилась
 target_not_selected.action.habitant : Цель не выбрана
+weak_enemy.attack.village На нас напала орда слабых противников
+equal_enemy.attack.village На нас напала армия по силе равных нам
+strong_enemy.attack.village На нас напало несколько исполинов

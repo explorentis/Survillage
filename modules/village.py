@@ -27,6 +27,7 @@ class Village():
     def attack(self, enemy_village):
         self.FightWith = enemy_village
         enemy_village.FightWith = self
-        for i in range(0, self.size()):
-            self.Habitants[i].Target = enemy_village.Habitants[i]
-            enemy_village.Habitants[i].Target = self.Habitants[i]
+        for habitant in self.Habitants:
+            habitant.Target = choice(enemy_village.Habitants)
+        for enemy in enemy_village.Habitants:
+            enemy.Target = choice(self.Habitants)

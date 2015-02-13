@@ -40,7 +40,7 @@ def remove_habitant(hero, home):
 def getThatWhoHasAliveEnemy(listAlly):
     result = []
     for habitant in listAlly:
-        if habitant.Target.IsDead == False:
+        if (habitant.Target is not None) and (not habitant.Target.IsDead):
             result.append(habitant)
     return result
 

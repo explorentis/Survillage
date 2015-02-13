@@ -55,3 +55,12 @@ def choiceWithWeight(elements):
         score -= elements[counter]
         counter += 1
     return counter
+
+'''
+While random number catched by good_interval, increment result by 1
+'''
+def incremental_count(good_interval, bad_interval):
+    result = 0
+    while putDice(good_interval, bad_interval):
+        result += 1
+    return result
