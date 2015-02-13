@@ -28,3 +28,4 @@ Valor.parameter.habitant смелость
 Caution.parameter.habitant осторожность
 increase.mutation.habitant Мутация: увеличилась
 overrepresentation.mutation.habitant Мутация: %s перераспределилась
+target_not_selected.action.habitant : Цель не выбрана

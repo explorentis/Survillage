@@ -26,20 +26,16 @@ def mutate_string(string, event_id):
         return string[:num_char] + new_char + string[num_char + charlen:]
 
 
-def remove_habitant(hero):
+def remove_habitant(hero, home):
     if hero.IsDead == False:
         return
-    for habitant in listHabitant:
+    for habitant in home.Habitants:
         for heroes in habitant.Heroes:
             if heroes == hero:
                 return
-    for habitant in listHabitant:
+    for habitant in home.Habitants:
         if hero == habitant:
-            listHabitant.remove(hero)
-    for habitant in listEnemy:
-        if hero == habitant:
-            listEnemy.remove(hero)
-
+            home.Habitants.remove(hero)
 
 def getThatWhoHasAliveEnemy(listAlly):
     result = []

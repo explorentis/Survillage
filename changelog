@@ -1,3 +1,8 @@
+0.4.0
+* Delete most profiles, you can create it yourself. Its rely with providing actual translate and config-file (too many
+time are need to updating all profiles)
+* devel: replace habitant lists to classes
+
 0.3.0a
 * Fix cant-find-rc-file error
 

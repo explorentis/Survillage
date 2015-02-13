@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from translate import t
 from random import choice, randint
-from global_vars import maxValueOfParameters, listEnemy, listHabitant, get_time
+from global_vars import maxValueOfParameters, get_time
 from filereader import names_list, ending, heroEnding
 from dice import putDice, selectPerson, choiceWithWeight
 from assistants import mutate_string, remove_habitant, getThatWhoHasAliveEnemy
@@ -11,21 +11,21 @@ from math import sqrt
 
 # initParam: ancestor, maxValue
 class Habitant():
-    def __init__(self, initParam):
+    def __init__(self, init_param, village):
         global maxValueOfParameters
-        if not 'maxValue' in initParam:
-            initParam.update({'maxValue': maxValueOfParameters})
-        if not 'ancestor' in initParam:
+        if 'maxValue' not in init_param:
+            init_param.update({'maxValue': maxValueOfParameters})
+        if 'ancestor' not in init_param:
             self.Description = {
                 'LastName': choice(names_list).capitalize() + heroEnding,
                 'Patronymic': choice(names_list).capitalize() + ending,
                 'Name': choice(names_list).capitalize()}
-            self.Stats = {'Strenght': randint(1, initParam['maxValue']),
-                          'Dexterity': randint(1, initParam['maxValue']),
-                          'Endurance': randint(1, initParam['maxValue']),
-                          'Accuracy': randint(1, initParam['maxValue']),
-                          'Valor': randint(1, initParam['maxValue']),
-                          'Caution': randint(1, initParam['maxValue'])}
+            self.Stats = {'Strenght': randint(1, init_param['maxValue']),
+                          'Dexterity': randint(1, init_param['maxValue']),
+                          'Endurance': randint(1, init_param['maxValue']),
+                          'Accuracy': randint(1, init_param['maxValue']),
+                          'Valor': randint(1, init_param['maxValue']),
+                          'Caution': randint(1, init_param['maxValue'])}
             for stat in self.Stats:
                 if self.Stats[stat] > maxValueOfParameters:
                     maxValueOfParameters = self.Stats[stat]
@@ -35,32 +35,31 @@ class Habitant():
                            'Accuracy': self,
                            'Valor': self,
                            'Caution': self}
-            self.IsHabitant = False
         else:
             self.Description = {
-                'LastName': self.get_heroname(initParam['ancestor'].Heroes) + heroEnding,
-                'Patronymic': initParam['ancestor'].Description['Name'] + ending,
+                'LastName': self.get_heroname(init_param['ancestor'].Heroes) + heroEnding,
+                'Patronymic': init_param['ancestor'].Description['Name'] + ending,
                 'Name': choice(names_list).capitalize()}
-            self.Stats = {'Strenght': initParam['ancestor'].Stats['Strenght'],
-                          'Dexterity': initParam['ancestor'].Stats['Dexterity'],
-                          'Endurance': initParam['ancestor'].Stats['Endurance'],
-                          'Accuracy': initParam['ancestor'].Stats['Accuracy'],
-                          'Valor': initParam['ancestor'].Stats['Valor'],
-                          'Caution': initParam['ancestor'].Stats['Caution']}
-            self.Heroes = {'Strenght': initParam['ancestor'].Heroes['Strenght'],
-                           'Dexterity': initParam['ancestor'].Heroes['Dexterity'],
-                           'Endurance': initParam['ancestor'].Heroes['Endurance'],
-                           'Accuracy': initParam['ancestor'].Heroes['Accuracy'],
-                           'Valor': initParam['ancestor'].Heroes['Valor'],
-                           'Caution': initParam['ancestor'].Heroes['Caution']}
-            self.IsHabitant = True
+            self.Stats = {'Strenght': init_param['ancestor'].Stats['Strenght'],
+                          'Dexterity': init_param['ancestor'].Stats['Dexterity'],
+                          'Endurance': init_param['ancestor'].Stats['Endurance'],
+                          'Accuracy': init_param['ancestor'].Stats['Accuracy'],
+                          'Valor': init_param['ancestor'].Stats['Valor'],
+                          'Caution': init_param['ancestor'].Stats['Caution']}
+            self.Heroes = {'Strenght': init_param['ancestor'].Heroes['Strenght'],
+                           'Dexterity': init_param['ancestor'].Heroes['Dexterity'],
+                           'Endurance': init_param['ancestor'].Heroes['Endurance'],
+                           'Accuracy': init_param['ancestor'].Heroes['Accuracy'],
+                           'Valor': init_param['ancestor'].Heroes['Valor'],
+                           'Caution': init_param['ancestor'].Heroes['Caution']}
 
+        self.Village = village
         self.IsDead = False
         self.HP = self.Stats['Endurance']
         self.Target = None
         # wave of birth (see comment to wave in global_vars):
         self.WoB = get_time()
-        if 'ancestor' in initParam:
+        if 'ancestor' in init_param:
             self.mutate()
             print t["new_habitant.info.village"], self.print_name(), self.print_stats()
 
@@ -90,24 +89,18 @@ class Habitant():
             'Val', self.Stats['Valor'], 'Cau', self.Stats['Caution']
         print 'HP', self.HP
         print t['wob.parameter.habitant'], self.WoB
-        print t['target.parameter.habitant'], self.Target.print_name()
+        if self.Target is not None:
+            print t['target.parameter.habitant'], self.Target.print_name()
         print '-' * 20
 
     def go_to_help(self):
-        if self.IsHabitant:
-            good_list = listHabitant
-            bad_list = listEnemy
-        else:
-            good_list = listEnemy
-            bad_list = listHabitant
-
-        if len(bad_list) == 0:
+        if self.Village.FightWith.size() == 0:
             print self.print_name() + t['waiting_end_battle.action.habitant']
             return False
 
-        persons_in_battle = getThatWhoHasAliveEnemy(good_list)
+        persons_in_battle = getThatWhoHasAliveEnemy(self.Village.Habitants)
         if len(persons_in_battle) < 2:
-            self.Target = choice(bad_list)
+            self.Target = choice(self.Village.FightWith.Habitants)
             return True
 
         self.Target = selectPerson('Valor', persons_in_battle, self).Target
@@ -116,11 +109,19 @@ class Habitant():
     def die(self):
         print self.Target.print_name(), t['kill.action.habitant'], self.print_name()
         self.IsDead = True
-        remove_habitant(self)
+        remove_habitant(self, self.Village)
 
     def hitting(self):
+        if self.Target is None:
+            print self.print_name() + t['target_not_selected.action.habitant']
+            if putDice(self.Stats['Valor'], self.Stats['Caution']):
+                if self.go_to_help():
+                    print self.print_name(), t['new_target.action.habitant'], \
+                        self.Target.print_name()
+                else:
+                    return
         if self.IsDead:
-            print self.print_name() + t['dead.action.habitant']
+            print self.print_name(), t['dead.action.habitant']
             return
         self.Target.Target = self
         if self.Target.IsDead:
@@ -213,5 +214,5 @@ class Habitant():
 
     def replace_hero(self, stat):
         if self.Stats[stat] > self.Heroes[stat].Stats[stat]:
-            remove_habitant(self.Heroes[stat])
+            remove_habitant(self.Heroes[stat], self.Village)
             self.Heroes[stat] = self

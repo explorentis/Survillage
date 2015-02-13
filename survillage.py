@@ -2,51 +2,47 @@
 # -*- coding: utf-8 -*-
 from modules.translate import t
 from modules.scenario_parse import read_scenario
-from modules.global_vars import listHabitant, listEnemy, get_time, inc_time
+from modules.global_vars import listHabitant, listEnemy, get_time, inc_time, maxValueOfParameters
 from modules.habitant import Habitant
+from modules.village import Village
+from random import choice
 
 initScenario = read_scenario()
 if initScenario is not None:
     if 'count' in initScenario:
-        for i in range(0, initScenario['count']):
-            listHabitant.append(Habitant(initScenario))
-            listHabitant[i].IsHabitant = True
+        count = initScenario['count']
+        village = Village(count, initScenario)
     else:
-        listHabitant.append(Habitant(initScenario))
-        listHabitant[0].IsHabitant = True
+        village = Village(1, initScenario)
 else:
-    listHabitant.append(Habitant({}))
-    listHabitant[0].IsHabitant = True
+    village = Village(1, {})
 
-while len(listHabitant) != 0:
+while village.size() != 0:
     print
     print(t["wave.label.game"] % ("=" * 10, get_time(), "=" * 10))
     print
     # Happy new wave!! Yo-ho-ho!!
-    for habitant in listHabitant:
-        enemy = Habitant({})
-        listEnemy.append(enemy)
-        habitant.Target = enemy
-        enemy.Target = habitant
+    foes = Village(village.size(), {})
+    village.attack(foes)
     # fight
     fightTime = 0
-    while len(listHabitant) != 0 and len(listEnemy) != 0:
+    while foes.size() != 0 and village.size() != 0:
         fightTime += 10
         print "+" * 10, t["habitants.label.game"], "+" * 10
-        for habitant in listHabitant:
+        for habitant in village.Habitants:
             habitant.print_all()
         print "+" * 10, t["enemies.label.game"], "+" * 10
-        for enemy in listEnemy:
+        for enemy in foes.Habitants:
             enemy.print_all()
         print '=' * 5, t['habitants_turn.info.game'], '=' * 5
-        for habitant in listHabitant:
+        for habitant in village.Habitants:
             habitant.hitting()
         print '=' * 7, t['enemies_turn.info.game'], '=' * 7
-        for enemy in listEnemy:
+        for enemy in foes.Habitants:
             enemy.hitting()
-        if len(listHabitant) == 0:
+        if village.size() == 0:
             print t['game_over.info.game']
-        elif len(listEnemy) == 0:
+        elif foes.size() == 0:
             print t['all_enemy_die.info.game']
             print(t['battle_duration.info.game'] % fightTime)
             raw_input(t['end_battle.need_action.game'])
@@ -54,10 +50,10 @@ while len(listHabitant) != 0:
             raw_input(t['end_turn_of_battle.need_action.game'])
     # make love not war:
     newHabitant = []
-    for habitant in listHabitant:
+    for habitant in village.Habitants:
         habitant.HP = habitant.Stats['Endurance']
-        newHabitant.append(Habitant({'ancestor': habitant}))
-    listHabitant += newHabitant
+        newHabitant.append(Habitant({'ancestor': habitant}, village))
+    village.Habitants += newHabitant
     inc_time()
-    if len(listHabitant) != 0:
+    if village.size() != 0:
         raw_input(t['end_wave.need_action.game'])
